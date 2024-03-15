@@ -131,3 +131,53 @@ def patrones(df_encoded,k):
     plt.title('PCA en tres dimensiones')
     plt.legend()
     return labels
+
+def caracteristica_cluster(X,y):
+    # Inicializar el clasificador de árbol de decisión
+    clf = DecisionTreeClassifier()
+    
+    # Entrenar el clasificador con los datos completos
+    clf.fit(X, y)
+    
+    # Visualizar el árbol de decisión
+    plt.figure(figsize=(15, 10))
+    plot_tree(clf, filled=True, feature_names=X.columns.tolist(), class_names="clase")
+    # Guardar la imagen en el directorio actual con el nombre 'grafico.png'
+    plt.savefig('grafico.png', dpi=300, bbox_inches='tight')
+    plt.show()
+    
+    
+    
+    
+    ######DEFINIR PESOS POR RANDOM FOREST
+    # Cargar el conjunto de datos de Iris
+    #X = df_encoded
+    #y = etiquetas
+    
+    # Dividir el conjunto de datos en entrenamiento y prueba
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    
+    # Crear un modelo de Random Forest
+    rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
+    
+    # Entrenar el modelo
+    rf_model.fit(X_train, y_train)
+    
+    # Obtener la importancia de las características
+    importances = rf_model.feature_importances_
+    
+    # Crear un DataFrame para mostrar la importancia de las características
+    feature_importance_df = pd.DataFrame(importances, index=X.columns, columns=['Importance'])
+    feature_importance_df = feature_importance_df.sort_values(by='Importance', ascending=False)
+    
+    # Mostrar la importancia de las características
+    print("Importancia de las características:")
+    print(feature_importance_df)
+    
+    # Graficar la importancia de las características
+    plt.figure(figsize=(10, 6))
+    plt.barh(feature_importance_df.index, feature_importance_df['Importance'])
+    plt.xlabel('Importance')
+    plt.ylabel('Features')
+    plt.title('Feature Importance')
+    plt.show()

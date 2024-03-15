@@ -50,20 +50,6 @@ def grafico_barra(df,Variable):
     plt.tight_layout()
     plt.show()
     
-def grafico_barra(df,Variable):
-    # Contar la frecuencia de cada categoría
-    frecuencia_categorias = df[Variable].value_counts()
-    
-    # Crear el gráfico de barras
-    plt.figure(figsize=(8, 6))
-    frecuencia_categorias.plot(kind='bar', color='skyblue')
-    plt.title('Distribución de Categorías')
-    plt.xlabel('Categoría')
-    plt.ylabel('Frecuencia')
-    plt.xticks(rotation=45)
-    plt.grid(axis='y', linestyle='--', alpha=0.7)
-    plt.tight_layout()
-    plt.show()
     
 def BinaryEncoderVar(df,columnas):
     # Supongamos que tienes un DataFrame llamado 'df' con una columna 'nivel'
@@ -83,6 +69,26 @@ def BinaryEncoderVar(df,columnas):
     df_encoded = df_encoded.drop(columns=columnas)
     df_encoded.info()
     return df_encoded
+
+def ncluster(df_encoded):
+    # Supongamos que tienes tus datos en una variable X
+    
+    # Lista para almacenar los valores de la inercia
+    inercia = []
+    
+    # Probamos un rango de valores de k (por ejemplo, de 1 a 10)
+    for k in range(1, 11):
+        kmeans = KMeans(n_clusters=k, random_state=42)
+        kmeans.fit(df_encoded)
+        inercia.append(kmeans.inertia_)
+    
+    # Graficar la curva de la inercia
+    plt.plot(range(1, 11), inercia, marker='o')
+    plt.xlabel('Número de clusters')
+    plt.ylabel('Inercia')
+    plt.title('Método del codo')
+    plt.show()
+
 
 def patrones(df_encoded,k):
     kmeans = KMeans(n_clusters=k)
